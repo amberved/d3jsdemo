@@ -1,3 +1,45 @@
-<HTML>
-<h1> Hello </h1>
-</HTML>
+<html>
+<script src='https://d3js.org/d3.v5.min.js'></script>
+<style> rect {fill: lightblue; stroke: black; }</style>
+<body onload='init()'>
+<svg width=300 height=300>
+</svg>
+<script>
+async function init() {
+  var data1 = [4,8,15,16,23,42];
+
+  var hightdomain = ['4','42'];
+  var hightrange = ['19.0476','200'];
+  var width = 200;
+  var height = 200;
+  var x = d3.scaleBand().domain([0,1,2,3,4,5]).range([0, width])
+  var y = d3.scaleLinear().domain([0,42]).range([height,0])
+  var height = d3.scaleLinear().domain(hightdomain).range(hightrange);
+
+  var margin = 50;
+  var hgh = 200
+  
+  d3.select('svg')
+    .append('g')
+    .attr('transform', 'translate(50,50)')
+    .selectAll('rect')
+    .data(data1)
+    .enter()
+    .append("rect")
+    .attr("x", function(d,i) { return x(i); })
+    .attr("y", y)
+    .attr("width", x.bandwidth())
+    .attr('height',function(d,i) {return  height(d);}); 
+
+    d3.select("svg").append("g")
+    .attr("transform", "translate("+margin+","+margin+")")
+    .call(d3.axisLeft(y));
+ 
+    d3.select("svg").append("g")
+    .attr("transform",  "translate("+margin+","+(hgh+margin)+")")
+    .call(d3.axisBottom(x));  
+  }
+  
+</script>
+</body>
+</html>  
