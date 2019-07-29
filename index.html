@@ -40,8 +40,41 @@ async function init() {
     .call(d3.axisBottom(x));  
   
     
+    var dataloc = "https://flunky.github.io/cars2017.csv"
+    var dataloc = "https://gist.githubusercontent.com/amberved/f8314f883cc95d18f5f3a205b1bd3cb8/raw/568725c0976c8cfa1054e2b45f2458c6dfbea39c/city_population_crossworld.csv"
+    //name,group,year,value,subGroup,city_id,lastValue,lat,lon
+    
+    const data = await d3.csv(dataloc);
   
+    data.forEach(function(d) {
+      d.name = d.name;
+      d.group = d.group;
+      d.year = +d.year;
+      d.subGroup = d.subGroup;
+      d.value = +d.value;
+      d.city_id = d.city_id;
+      d.lastValue = +d.lastValue;
+      d.lat = +d.lat;
+      d.lon = +d.lon;
+    });
+    
+    minLon = d3.min(data, function(d) { return d.lon; });
+    maxLon = d3.max(data, function(d) { return d.lon; });
+    minLat = d3.min(data, function(d) { return d.lat; });
+    maxLat = d3.max(data, function(d) { return d.lat; });
+    
+    console.log('Min lon = ' + minLon);
+    console.log('Max lon = ' + maxLon);
+    console.log('Min lat = ' + minLat);
+    console.log('Max lat = ' + maxLat);
+ 
+    const distinctYears = [...new Set(data.map(x => x.year))];
+    const distinctCities = [...new Set(data.map(x => x.name))];
+    
+    console.log("Years= " +  distinctYears);
+    console.log("Cities= " +  distinctCities);
   
+    console.log(data[0]);
   
     //Second
     d3.select('#bar2')
