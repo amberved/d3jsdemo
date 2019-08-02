@@ -8,7 +8,6 @@ function init(){
 
 
 
-
 function drawInterval(func, waitTime, noOftimes){
    let interv = function(wait, time){
       return function(){
@@ -65,7 +64,7 @@ function displayChart(data){
       let chartData = _.first(_.sortBy(populationArray[years[i]], 'value').reverse(),20);
       console.log("chartData",chartData);
       chart.draw(chartData);
-   }, 100,  noOfYears-1);
+   }, 400,  noOfYears-1);
 }
 
 
@@ -76,8 +75,8 @@ function Chart(id){
    this.id = id;
    var self = this;
    this.margin = {top: 20, right: 20, bottom: 30, left: 40},
-      this.width = 1200 - this.margin.left - this.margin.right,
-      this.height = 1080 - this.margin.top - this.margin.bottom;
+      this.width = 1024 - this.margin.left - this.margin.right,
+      this.height = 768 - this.margin.top - this.margin.bottom;
 
    // Google Color pallete
    this.color = d3.scale.ordinal()
