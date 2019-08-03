@@ -188,3 +188,37 @@ function Chart(id){
          );
    }
 }
+
+function modeOne() {
+
+ 	var circle = svg.selectAll("circle").data(dataArray);
+  		circle.exit().remove();
+     	
+	circle.enter().append("circle");
+                 circle.transition()
+                 .duration(1000)
+                 .attr("cx",function(d,i){ 
+
+                            return centerX + 200 * Math.cos(2 * Math.PI * i / 90); 
+                            })
+                  .attr("cy",function(d,i){ 
+                            return centerY + 200 * Math.sin(2 * Math.PI * i / 90);
+                  })
+                  .attr("r",function(d){ return d * 3; })
+		.on("mousemove",function(){  });
+
+}
+
+function modeTwo() {
+		
+ 									var circle = svg.selectAll("circle").data(dataArray);
+  					     circle.exit().remove();
+     						 circle.enter().append("circle");  
+                 circle.transition()
+                      .duration(1000)
+                      .attr("cx",function(d,i){ return centerX + parseInt(i/20) * 50; })
+                      .attr("cy",function(d,i){ return centerY-100 + i%20 * 15; })
+                      .attr("r",function(d){ return d * 3; });
+
+}
+
