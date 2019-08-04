@@ -4,6 +4,8 @@ function init(){
       displayChart(data);
 
    });
+
+	
 }
 
 
@@ -29,7 +31,8 @@ function drawInterval(func, waitTime, noOftimes){
 
 
 
-var populationArray, i =0, noOfYears=0, citiesArray=[];
+var populationArray, i=0, noOfYears=0, citiesArray=[];
+var stop=0; 
 
 function displayChart(data){
 
@@ -38,7 +41,7 @@ function displayChart(data){
       return d;
    });
 
-   console.log(populationArray);
+	//console.log(populationArray);
 
    populationArray =  _.sortBy(data, 'year');
 
@@ -59,10 +62,16 @@ function displayChart(data){
 
       document.getElementById("year").innerHTML = years[i];
       console.log("i",i);
-      console.log("populationArray[years[i]]",populationArray[years[i]]);
-      i++;
-      let chartData = _.first(_.sortBy(populationArray[years[i]], 'value').reverse(),20);
-      console.log("chartData",chartData);
+      //console.log("populationArray[years[i]]",populationArray[years[i]]);
+      
+      if (stop == 0) {i++;}
+      if (i < 0) {i=0;}
+      if (i >= noOfYears) {i = 0;}
+
+      var year_display = this.i;
+      
+      let chartData = _.first(_.sortBy(populationArray[years[year_display]], 'value').reverse(),20);
+      //console.log("chartData",chartData);
       chart.draw(chartData);
    }, 400,  noOfYears-1);
 }
@@ -76,7 +85,7 @@ function Chart(id){
    var self = this;
    this.margin = {top: 20, right: 20, bottom: 30, left: 40},
       this.width = 1024 - this.margin.left - this.margin.right,
-      this.height = 768 - this.margin.top - this.margin.bottom;
+      this.height = 600 - this.margin.top - this.margin.bottom;
 
    // Google Color pallete
    this.color = d3.scale.ordinal()
@@ -186,39 +195,93 @@ function Chart(id){
          .attr("transform", function(d, i) {
             return "translate(0," + i * 30 + ")"; }
          );
+
+	   
    }
-}
 
-function modeOne() {
+	d3.select("#barchart")
+	.on("mouseover", handleMouseOver)
+        .on("mouseout", handleMouseOut)
+	.on("contextmenu",handleRightClick)
+	.on("click",handleLeftClick);
+	
 
- 	var circle = svg.selectAll("circle").data(dataArray);
-  		circle.exit().remove();
-     	
-	circle.enter().append("circle");
-                 circle.transition()
-                 .duration(1000)
-                 .attr("cx",function(d,i){ 
+/**/
 
-                            return centerX + 200 * Math.cos(2 * Math.PI * i / 90); 
-                            })
-                  .attr("cy",function(d,i){ 
-                            return centerY + 200 * Math.sin(2 * Math.PI * i / 90);
-                  })
-                  .attr("r",function(d){ return d * 3; })
-		.on("mousemove",function(){  });
 
 }
 
-function modeTwo() {
-		
- 									var circle = svg.selectAll("circle").data(dataArray);
-  					     circle.exit().remove();
-     						 circle.enter().append("circle");  
-                 circle.transition()
-                      .duration(1000)
-                      .attr("cx",function(d,i){ return centerX + parseInt(i/20) * 50; })
-                      .attr("cy",function(d,i){ return centerY-100 + i%20 * 15; })
-                      .attr("r",function(d){ return d * 3; });
 
-}
+      function handleMouseOver(d, t) {  // Add interactivity
 
+            // Use D3 to select element, change color and size
+            //d3.select(this).attr({
+              //fill: "orange",
+              //r: radius * 2
+            //});
+	    stop = 1;
+		console.log(" stop = 1");
+
+            // Specify where to put label of text
+            //this.svg.append("text").attr({
+            //   id: "tstop"  // Create an id for text so we can select it later for removing on mouseout
+            //})
+            //.text(function() {
+            //  return "stop"; // Value of the text
+            //});
+	      //
+	      //
+	      //
+	    const annotations = [
+  		{
+    		note: {
+      			label: "Here is the annotation label",
+      			title: "Annotation title"
+    		},
+    		type: d3.annotationCalloutCircle,
+    		subject: {
+      			radius: 20,         // circle radius
+      			radiusPadding: 20   // white space around circle befor connector
+    		},
+    		color: ["red"],
+    		x: 40,
+    		y: 160,
+    		dy: 70,
+    		dx: 70
+  		}
+	     ]
+
+	     // Add annotation to the chart
+		const makeAnnotations = d3.annotation().annotations(annotations)
+
+	      d3.select("#example4")
+  		.append("g")
+  		.call(makeAnnotations)
+
+          }
+
+      function handleMouseOut(d, t) {
+            // Use D3 to select element, change color back to normal
+            //d3.select(this).attr({
+            //  fill: "black",
+            //  r: radius
+            //});
+		console.log(" stop = 0");
+	    stop = 0;
+	    //this.svg.select("#tstop").remove(); 
+
+            // Select text by id and then remove
+            //d3.select("#t").remove();  // Remove text location
+          }
+
+     function handleLeftClick(d,t) {
+	i++;
+	console.log("handleLeftClick" + i);
+     }
+
+     function handleRightClick(d,t) {
+        d3.event.preventDefault();
+	i--;
+	console.log("handleRightClick" + i);
+	
+     }
